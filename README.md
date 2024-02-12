@@ -26,3 +26,6 @@ Currently, here's the state of play for LLM application infrastructure
 | **Quality of Life Infrastructure** | RAG, prompt chains, prompt lifecycle management, agents, etc. |
 | **Core Functionalities** | vector databases, synthetic data, similarity search, LLM libraries, etc. |
 | LLM(s) | Below the fold |
+
+Each of these layers provides critical functionalities for LLM developers. The Quality of Content layer is just now being discovered as something that's needed by developers, and there exists an opportunity to build and deploy this level of infrastructure in a way that will grately benefit the development community. 
+
