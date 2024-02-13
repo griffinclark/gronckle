@@ -1,6 +1,7 @@
 
 # The main function that users will call
-from gronckle.smart_chunking.split_text_responsibly import split_chunks_responsibly
+import tiktoken
+from split_text_responsibly import split_chunks_responsibly
 import openai
 import re
 import uuid
@@ -15,7 +16,8 @@ def chunk_smartly(
         model="gpt-4-1106-preview",
         sanitize=True,
         astra_session=None,
-        keyspace=None
+        keyspace=None,
+        max_context_length=2048
         ):
     """
     Chunk the given documents into smaller chunks using OpenAI's language model.
@@ -30,11 +32,19 @@ def chunk_smartly(
     - astra_session (astra.Session, optional): A session object for the Astra database. If one is passed, data will be stored in Astra. Defaults to None.
     - keyspace (str, optional): The keyspace in the Astra database to store the data. Required if astra_session is not None.
     Returns:
-    - operation_completed_successfully (bool): True if the operation completed successfully, False otherwise.
+    - list: A list of strings, each representing a chunk of the input documents.
     """
    
     openai.api_key = openai_api_key
     for document in strings_to_chunk:
+        # If the document has more tokens than the maximum context length, truncate it and add the rest to the back of strings_to_chunk
+
+        # Get token count assuming openai encodings
+        encoding = tiktoken.get_encoding("cl100k_base")
+        num_tokens = len(encoding.encode(document))
+        if num_tokens > max_context_length:
+            strings_to_chunk.append(document[max_context_length:])
+            document = document[:max_context_length]
         split_docs = split_chunks_responsibly(
             document, 
             target_chunk_size, 
@@ -62,3 +72,4 @@ def chunk_smartly(
                         VALUES (?, ?, ?)
                     """)
                 astra_session.execute(insert_stmt, [doc_id, chunk_text, embedding])
+    return split_docs
