@@ -36,15 +36,14 @@ def chunk_smartly(
     """
    
     openai.api_key = openai_api_key
-    for document in strings_to_chunk:
-        # If the document has more tokens than the maximum context length, truncate it and add the rest to the back of strings_to_chunk
 
-        # Get token count assuming openai encodings
+
+    for document in strings_to_chunk:
+        # TODO If the document has more tokens than the maximum context length, truncate it and add the rest to the back of strings_to_chunk
         encoding = tiktoken.get_encoding("cl100k_base")
         num_tokens = len(encoding.encode(document))
-        if num_tokens > max_context_length:
-            strings_to_chunk.append(document[max_context_length:])
-            document = document[:max_context_length]
+
+        print("Working with document: ", document[:200] + "..." if len(document) > 200 else document, "of length ", str(num_tokens))
         split_docs = split_chunks_responsibly(
             document, 
             target_chunk_size, 

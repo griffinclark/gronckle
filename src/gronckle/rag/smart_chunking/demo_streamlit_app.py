@@ -1,13 +1,16 @@
 import streamlit as st
-from main import chunk_smartly  
+from main import chunk_smartly  # Ensure this points to your actual chunk_smartly function
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-import tiktoken
-
+# Assuming tiktoken is a typo or a mock-up library, adjust as necessary
 
 # Mockup for split_chunks_responsibly (replace with actual function)
 def split_chunks_responsibly(document, target_chunk_size, context, model):
     # Mockup function that returns a list of chunks
     return [document[i:i+target_chunk_size] for i in range(0, len(document), target_chunk_size)]
+
+def sanitize_markdown(chunk):
+    # Escape markdown special characters
+    return chunk.replace("`", "\`").replace("*", "\*").replace("_", "\_")
 
 # Streamlit App
 def main():
@@ -41,15 +44,17 @@ def main():
 
         with col1:
             st.subheader("Smart Chunking Output")
+            st.write("---")
             for i, chunk in enumerate(smart_chunks, start=1):
-                st.write(f"Chunk {i}:")
-                st.text(chunk)
+                st.write(f"**Chunk {i}:**")
+                st.text(chunk)  # Using `text` instead of `markdown`
 
         with col2:
             st.subheader("LangChain Recursive Text Chunk Splitter Output")
+            st.write("---")
             for i, chunk in enumerate(recursive_chunks, start=1):
-                st.write(f"Chunk {i}:")
-                st.text(chunk)
+                st.write(f"**Chunk {i}:**")
+                st.text(chunk)  # Using `text` instead of `markdown`
 
 if __name__ == "__main__":
     main()
