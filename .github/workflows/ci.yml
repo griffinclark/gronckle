@@ -3,11 +3,14 @@ name: Publish Python 🐍 distribution 📦 to PyPI
 # This trigger runs the workflow on every push to any branch.
 # Remove or adjust the branches as needed.
 on:
-  push
-  # For testing: Runs this workflow on every commit.
-  # To limit to specific branches, use the following:
-  # branches:
-  #   - main  # Run on commits to the main branch
+  push:
+    branches-ignore:
+      - "**" # This will ignore all branches for push events
+  pull_request:
+    types:
+      - opened
+      - synchronize
+  workflow_dispatch:
 
 jobs:
   deploy:
