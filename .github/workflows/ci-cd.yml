@@ -2,28 +2,36 @@ name: CI/CD Pipeline
 
 on:
   push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write # Add this line for OIDC
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: "3.x"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel twine build
+          python -m pip install --upgrade pip
+          pip install setuptools wheel build
 
-      - name: Publish to PyPI # Use the pypa action for publishing
+      - name: Build distribution
+        run: |
+          python -m build
+
+      - name: List built distributions
+        run: |
+          ls dist/
+
+      - name: Publish distribution to PyPI
         uses: pypa/gh-action-pypi-publish@v1.4.2
         with:
           user: __token__
