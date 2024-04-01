@@ -3,15 +3,12 @@ name: Publish Python 🐍 distribution 📦 to PyPI
 # This trigger runs the workflow on every push to any branch.
 # Remove or adjust the branches as needed.
 on:
-  push
-  # For testing: Runs this workflow on every commit.
-  # To limit to specific branches, use the following:
-  # branches:
-  #   - main  # Run on commits to the main branch
+  push:
+  workflow_dispatch:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: Gandalf-3
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
