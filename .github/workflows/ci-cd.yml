@@ -28,23 +28,21 @@ jobs:
       - name: Install toml if necessary (for Python versions < 3.11)
         run: |
           if python -c "import sys; sys.exit(sys.version_info < (3, 11))"; then
-            echo "Python version is less than 3.11, installing 'toml' package..."
             python -m pip install toml
-          else
-            echo "Python version is 3.11 or greater, no need to install 'toml'."
           fi
 
       - name: Generate .bumpversion.cfg from pyproject.toml
         run: |
           bash scripts/pipe/update_version.sh
 
+      - name: Configure git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
       - name: Auto-increment version
         run: |
           bump2version patch
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -am "Automatically bump version" || echo "No changes to commit"
-          git push
 
       - name: Build distribution
         run: |
