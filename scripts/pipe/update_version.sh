@@ -9,7 +9,9 @@ if sys.version_info < (3, 11):
     version = toml.load(open('pyproject.toml', 'r'))['project']['version']
 else:
     import tomllib  # for Python 3.11 and later
-    version = tomllib.loads(open('pyproject.toml', 'rb').read())['project']['version']
+    # Correctly handle the file content as bytes
+    with open('pyproject.toml', 'rb') as f:
+        version = tomllib.load(f)['project']['version']
 print(version)
 ")
 
