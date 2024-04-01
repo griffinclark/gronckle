@@ -36,7 +36,15 @@ jobs:
 
       - name: Generate .bumpversion.cfg from pyproject.toml
         run: |
-          version=$(python -c "import sys; import toml if sys.version_info < (3, 11) else import tomllib; print(toml.load('pyproject.toml')['project']['version'] if 'toml' in sys.modules else tomllib.loads(open('pyproject.toml', 'rb').read())['project']['version'])")
+          version=$(python -c "\
+          import sys; \
+          if sys.version_info < (3, 11): \
+              import toml; \
+              print(toml.load(open('pyproject.toml', 'r'))['project']['version']); \
+          else: \
+              import tomllib; \
+              print(tomllib.loads(open('pyproject.toml', 'rb').read())['project']['version']) \
+          ")
           echo "Creating .bumpversion.cfg with current version $version"
           echo "[bumpversion]" > .bumpversion.cfg
           echo "current_version = $version" >> .bumpversion.cfg
