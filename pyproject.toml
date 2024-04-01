@@ -14,5 +14,5 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/pypa/sampleproject"
+Homepage = "https://github.com/pypa/gronckle"
 Issues = "https://github.com/pypa/sampleproject/issues"
