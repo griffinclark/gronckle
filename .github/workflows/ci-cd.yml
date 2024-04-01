@@ -25,9 +25,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools wheel build bump2version
 
+      - name: Generate .bumpversion.cfg from pyproject.toml
+        run: |
+          version=$(python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])")
+          echo "Creating .bumpversion.cfg with current version $version"
+          echo "[bumpversion]" > .bumpversion.cfg
+          echo "current_version = $version" >> .bumpversion.cfg
+          echo "commit = True" >> .bumpversion.cfg
+          echo "tag = True" >> .bumpversion.cfg
+          echo "" >> .bumpversion.cfg
+          echo "[bumpversion:file:pyproject.toml]" >> .bumpversion.cfg
+          echo 'search = version = "{current_version}"' >> .bumpversion.cfg
+          echo 'replace = version = "{new_version}"' >> .bumpversion.cfg
+
       - name: Auto-increment version
         run: |
-          bump2version patch --config-file pyproject.toml --allow-dirty
+          bump2version patch
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -am "Automatically bump version" || echo "No changes to commit"
