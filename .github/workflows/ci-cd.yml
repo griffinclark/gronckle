@@ -5,18 +5,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  pypi-publish:
+  deploy:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write # Mandatory for trusted publishing
+      contents: read
+      id-token: write # Add this line for OIDC
+
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: "3.x"
-      - name: Build Package
+
+      - name: Install Dependencies
         run: |
-          python -m build
-      - name: Publish package distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+          python -m pip install --upgrade pip setuptools wheel twine build
+
+      - name: Publish to PyPI # Use the pypa action for publishing
+        uses: pypa/gh-action-pypi-publish@v1.4.2
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
