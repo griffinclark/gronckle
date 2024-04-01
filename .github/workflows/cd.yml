@@ -4,12 +4,6 @@ name: Publish Python 🐍 distribution 📦 to PyPI
 # Remove or adjust the branches as needed.
 on:
   push:
-    branches-ignore:
-      - "**" # This will ignore all branches for push events
-  pull_request:
-    types:
-      - opened
-      - synchronize
   workflow_dispatch:
 
 jobs:
