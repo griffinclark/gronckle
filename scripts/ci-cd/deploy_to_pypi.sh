@@ -3,9 +3,6 @@
 # Exit in case of error
 set -e
 
-# Define variable for PyPI token
-PYPI_API_TOKEN="$1"
-
 echo "Starting deployment to PyPI..."
 
 # Ensure all required tools are installed
@@ -24,8 +21,8 @@ python3 -m build .
 echo "Checking the distributions..."
 twine check dist/*
 
-# Publish the distributions to PyPI
+# Publish the distributions to PyPI using trusted publishing setup
 echo "Publishing to PyPI..."
-twine upload dist/* -u __token__ -p "$PYPI_API_TOKEN" --non-interactive --skip-existing
+twine upload dist/* --non-interactive --skip-existing
 
 echo "Deployment completed successfully."
