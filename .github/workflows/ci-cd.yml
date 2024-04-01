@@ -25,9 +25,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools wheel build bump2version
 
+      - name: Install toml if necessary
+        run: |
+          if python -c "import sys; sys.exit(sys.version_info < (3, 11))"; then
+            echo "Python version is less than 3.11, installing 'toml' package..."
+            python -m pip install toml
+          else
+            echo "Python version is 3.11 or greater, no need to install 'toml'."
+          fi
+
       - name: Generate .bumpversion.cfg from pyproject.toml
         run: |
-          version=$(python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])")
+          version=$(python -c "import sys; import toml if sys.version_info < (3, 11) else import tomllib; print(toml.load('pyproject.toml')['project']['version'] if 'toml' in sys.modules else tomllib.loads(open('pyproject.toml', 'rb').read())['project']['version'])")
           echo "Creating .bumpversion.cfg with current version $version"
           echo "[bumpversion]" > .bumpversion.cfg
           echo "current_version = $version" >> .bumpversion.cfg
