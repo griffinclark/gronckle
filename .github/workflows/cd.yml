@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: Gandalf-3
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
