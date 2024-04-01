@@ -2,6 +2,8 @@ name: CI/CD Pipeline
 
 on:
   push:
+    branches:
+      - main # Only run on pushes to the main branch
   workflow_dispatch:
 
 jobs:
